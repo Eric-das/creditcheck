@@ -1,0 +1,36 @@
+# --- Secrets & runtime config (NEVER commit) ---
+config.json
+.env
+*.secret
+
+# --- Customer financial data / evidence (NEVER commit) ---
+data/
+output/
+exports/
+*.xlsx
+*.xls
+*.csv
+*.pdf
+*.eml
+sage_cache/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

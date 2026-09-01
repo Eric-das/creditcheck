@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CreditCheck — Connect to Sage (mockup)</title>
+<style>
+  :root{
+    --ink:#1c2430; --muted:#6b7787; --line:#e3e8ee; --panel:#fff;
+    --slate:#111826; --accent:#0e7c86; --accent-soft:#e6f4f5;
+    --green:#2f7d4f; --green-soft:#eaf5ee; --amber:#b7791f; --amber-soft:#fdf6e6;
+    --mono:"Consolas","SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:#e9edf1;color:var(--ink);
+       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:26px}
+  .window{width:920px;max-width:100%;background:var(--panel);border-radius:12px;overflow:hidden;
+          box-shadow:0 18px 50px rgba(20,30,45,.22);display:grid;grid-template-columns:320px 1fr}
+
+  /* Left brand panel */
+  .brandcol{background:linear-gradient(160deg,#182233,#0d1420);color:#cdd6e2;padding:30px 28px;display:flex;flex-direction:column}
+  .logo{font-size:22px;font-weight:700;color:#fff;display:flex;align-items:center;gap:9px}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--accent)}
+  .tag{margin-top:10px;font-size:13px;line-height:1.55;color:#9aa6b6}
+  .steps{margin-top:32px;flex:1}
+  .step{display:flex;gap:12px;align-items:flex-start;padding:12px 0}
+  .step .num{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+             font-size:12px;font-weight:700;border:1.5px solid #33415a;color:#8a99ac}
+  .step.done .num{background:var(--accent);border-color:var(--accent);color:#fff}
+  .step.active .num{border-color:var(--accent);color:#fff}
+  .step .t{font-size:13.5px;font-weight:600;color:#e7edf4}
+  .step .d{font-size:11.5px;color:#8a99ac;margin-top:2px}
+  .step.pending .t{color:#7c8905;color:#78859a}
+  .trust{border-top:1px solid #26324a;padding-top:16px;font-size:11.5px;line-height:1.6;color:#9aa6b6}
+  .trust b{color:#a7dde2}
+
+  /* Right form */
+  .form{padding:30px 34px}
+  .form h1{margin:0;font-size:20px}
+  .form .lead{color:var(--muted);font-size:13px;margin:6px 0 22px}
+
+  .detect{background:var(--green-soft);border:1px solid #cfe7d8;border-radius:9px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+  .detect .chk{width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .detect .h{font-weight:700;font-size:13.5px;color:#1f5b3a}
+  .detect table{margin-top:8px;border-collapse:collapse}
+  .detect td{padding:2px 0;font-size:12.5px;color:#39514a}
+  .detect td.l{color:#5c7a68;padding-right:16px;white-space:nowrap}
+  .detect td .path{font-family:var(--mono);font-size:11.5px}
+
+  .auto{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--green);background:#fff;border:1px solid #cfe7d8;border-radius:8px;padding:10px 14px;margin-bottom:20px}
+  .auto .chk{color:var(--green)}
+  .auto b{color:var(--ink)}
+  .auto .re{margin-left:auto;font-size:11.5px;color:var(--accent);text-decoration:underline;cursor:pointer}
+
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:12px;font-weight:600;color:#48545f;margin-bottom:6px}
+  .field .row{display:flex;gap:12px}
+  .inp{width:100%;border:1px solid #cfd6de;border-radius:7px;padding:10px 12px;font-size:13.5px;font-family:var(--mono);background:#fcfdfe}
+  .inp:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .hint{font-size:11px;color:var(--muted);margin-top:5px}
+
+  .mode{display:flex;align-items:center;gap:10px;background:var(--amber-soft);border:1px solid #efe0bd;border-radius:8px;padding:11px 14px;margin-bottom:18px;font-size:12.5px;color:#7a5a12}
+  .mode .lock{font-size:15px}
+  .mode b{color:#5f4708}
+
+  .license{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted);margin-bottom:22px}
+  .license .pill{background:var(--green-soft);color:var(--green);border:1px solid #cfe7d8;border-radius:20px;padding:2px 10px;font-weight:600;font-size:11.5px}
+  .license .key{font-family:var(--mono);color:#48545f}
+
+  .cta{width:100%;border:none;background:var(--accent);color:#fff;font-size:15px;font-weight:700;padding:13px;border-radius:9px;cursor:pointer}
+  .cta:hover{background:#0b6c75}
+  .foot{text-align:center;font-size:11px;color:var(--muted);margin-top:14px;line-height:1.6}
+  .foot b{color:#3f7d84}
+  .mockbadge{position:fixed;right:12px;bottom:10px;background:#111826;color:#fff;font-size:10.5px;padding:4px 9px;border-radius:5px;opacity:.7}
+</style>
+</head>
+<body>
+  <div class="window">
+    <!-- Left -->
+    <div class="brandcol">
+      <div class="logo"><span class="dot"></span>CreditCheck</div>
+      <div class="tag">Get the ledger right before you chase. Runs on your PC, connects to your own Sage.</div>
+
+      <div class="steps">
+        <div class="step done"><div class="num">✓</div><div><div class="t">Activate subscription</div><div class="d">Licence verified</div></div></div>
+        <div class="step active"><div class="num">2</div><div><div class="t">Connect to Sage</div><div class="d">Detect &amp; sign in</div></div></div>
+        <div class="step pending"><div class="num">3</div><div><div class="t">First scan</div><div class="d">Read your accounts</div></div></div>
+      </div>
+
+      <div class="trust">
+        🔒 <b>Your data never leaves this PC.</b><br>
+        CreditCheck reads Sage in <b>read-only</b> mode and processes everything locally. Nothing is uploaded to any cloud.
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="form">
+      <h1>Connect to your Sage company</h1>
+      <div class="lead">We set up the connection for you — no ODBC settings to touch.</div>
+
+      <div class="detect">
+        <div class="chk">✓</div>
+        <div>
+          <div class="h">Sage 50 found on this PC</div>
+          <table>
+            <tr><td class="l">Version</td><td>Sage 50 Accounts v33</td></tr>
+            <tr><td class="l">Company</td><td>Demo Company Ltd</td></tr>
+            <tr><td class="l">Data folder</td><td><span class="path">\\SERVER\SAGE\ACCDATA</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="auto">
+        <span class="chk">✓</span><div><b>ODBC connection configured automatically</b> — DSN “CreditCheck_Sage” created</div>
+        <span class="re">Change company</span>
+      </div>
+
+      <div class="field">
+        <label>Sage log-in</label>
+        <div class="row">
+          <input class="inp" value="MANAGER" style="max-width:180px" aria-label="Sage username">
+          <input class="inp" type="password" value="············" aria-label="Sage password">
+        </div>
+        <div class="hint">Same credentials you use to open Sage. Stored encrypted on this PC only — never sent anywhere.</div>
+      </div>
+
+      <div class="mode">
+        <span class="lock">🔒</span><div><b>Read-only access.</b> CreditCheck can never post or change anything in Sage. It only reads and proposes; you post.</div>
+      </div>
+
+      <div class="license">
+        <span class="pill">✓ Active</span>
+        <span>Licence</span><span class="key">CC-PRO-4F9K-2210</span>
+        <span style="margin-left:auto">renews 14 Sep 2026</span>
+      </div>
+
+      <button class="cta">Connect &amp; run first scan →</button>
+      <div class="foot">By connecting you confirm you’re authorised to access this Sage company.<br>
+        <b>Read-only • Local processing • No cloud upload</b></div>
+    </div>
+  </div>
+  <div class="mockbadge">MOCKUP · sample data · not a working build</div>
+</body>
+</html>

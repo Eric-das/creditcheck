@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CreditCheck</title>
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ================= CONNECT SCREEN ================= -->
+<div id="connect" class="screen">
+  <div class="window">
+    <div class="brandcol">
+      <div class="logo"><span class="dot"></span>CreditCheck</div>
+      <div class="tag">Get the ledger right before you chase. Runs on your PC, connects to your own Sage.</div>
+      <div class="steps">
+        <div class="step active"><div class="num">1</div><div><div class="t">Connect to Sage</div><div class="d">Read-only sign-in</div></div></div>
+        <div class="step"><div class="num">2</div><div><div class="t">First scan</div><div class="d">Read your customer accounts</div></div></div>
+        <div class="step"><div class="num">3</div><div><div class="t">Query</div><div class="d">Net owed + allocation + split</div></div></div>
+      </div>
+      <div class="trust">🔒 <b>Your data never leaves this PC.</b><br>CreditCheck reads Sage in <b>read-only</b> mode and processes everything locally.</div>
+    </div>
+    <div class="form">
+      <h1>Connect to your Sage company</h1>
+      <div class="lead">Read-only. CreditCheck can never post or change anything in Sage.</div>
+      <div class="field"><label>Sage ODBC data source (DSN)</label>
+        <input id="c-dsn" class="inp" value="SageYourDSN"></div>
+      <div class="field"><label>Sage log-in</label>
+        <input id="c-user" class="inp" value="MANAGER" placeholder="username"></div>
+      <div class="field"><label>Password</label>
+        <input id="c-pass" class="inp" type="password" placeholder="Sage password" autofocus></div>
+      <div class="mode"><span>🔒</span><div><b>Read-only access.</b> It only reads and proposes; you post.</div></div>
+      <button id="c-btn" class="cta">Connect &amp; run first scan →</button>
+      <div id="c-err" class="err hidden"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MAIN APP ================= -->
+<div id="mainapp" class="app hidden">
+  <aside>
+    <div class="brand"><span class="dot"></span>CreditCheck<small>Forensic AR credit control</small></div>
+    <nav><a class="active">⛃ Query accounts</a></nav>
+    <div class="side-foot">
+      <div class="lock">🔒 Data stays on this PC</div>
+      <div>Nothing is uploaded.</div>
+    </div>
+  </aside>
+  <main>
+    <div class="topbar">
+      <div class="conn"><span class="g"></span>Connected: <b id="t-company">Sage</b></div>
+      <span class="ro">READ-ONLY</span>
+      <span class="conn" id="t-scan">—</span>
+      <span class="local">🔒 Local processing — data never leaves this machine</span>
+    </div>
+
+    <div class="split">
+      <!-- UPPER: query input + client list -->
+      <section class="upper">
+        <div class="searchrow">
+          <textarea id="q-input" placeholder="Type a customer code or name to search. Batch: paste several codes separated by space, comma or new line."></textarea>
+        </div>
+        <div class="searchhint" id="q-hint">—</div>
+        <div class="panel acctpanel">
+          <table>
+            <thead><tr><th>Account</th><th>Customer</th><th class="amt">Book balance</th></tr></thead>
+            <tbody id="acctrows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- LOWER: three-stage results -->
+      <section class="lower">
+        <div class="lowerhead" id="l-head">Select a customer above to see results</div>
+        <div class="tabs">
+          <button id="tabbtn1" class="active" data-tab="1">Stage 1 · Net &amp; open items</button>
+          <button id="tabbtn2" data-tab="2">Stage 2 · Allocation chain</button>
+          <button id="tabbtn3" data-tab="3">Stage 3 · Split reconciliation</button>
+        </div>
+        <div class="tabwrap">
+          <div id="tab1" class="tabview active"><div class="empty">No customer selected.</div></div>
+          <div id="tab2" class="tabview"><div class="empty">No customer selected.</div></div>
+          <div id="tab3" class="tabview"><div class="empty">No customer selected.</div></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

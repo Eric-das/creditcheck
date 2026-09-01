@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CreditCheck — UI Preview (mockup)</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --panel:#ffffff; --ink:#1c2430; --muted:#6b7787;
+    --line:#e3e8ee; --slate:#1f2937; --slate2:#111826;
+    --accent:#0e7c86; --accent-soft:#e6f4f5;
+    --red:#c0392b; --red-soft:#fbecea; --amber:#b7791f; --amber-soft:#fdf6e6;
+    --green:#2f7d4f; --green-soft:#eaf5ee;
+    --mono:"Consolas","SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+  .app{display:flex;min-height:100vh}
+
+  /* Sidebar */
+  aside{width:216px;background:var(--slate2);color:#c7d0dc;display:flex;flex-direction:column;flex-shrink:0}
+  .brand{padding:18px 18px 14px;font-size:17px;font-weight:700;color:#fff;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+  .brand small{display:block;font-weight:400;font-size:11px;color:#8593a4;margin-top:2px;letter-spacing:0}
+  nav{margin-top:8px;flex:1}
+  nav a{display:flex;align-items:center;gap:10px;padding:10px 18px;color:#aeb9c7;text-decoration:none;font-size:13.5px;border-left:3px solid transparent}
+  nav a.active{background:#1b2534;color:#fff;border-left-color:var(--accent)}
+  nav a span.i{width:16px;text-align:center;opacity:.9}
+  .side-foot{padding:14px 16px;border-top:1px solid #232f40;font-size:11.5px;line-height:1.5;color:#8593a4}
+  .side-foot .lock{color:#9fd6db}
+  .side-foot .sub{margin-top:8px;color:#7f8b9c}
+
+  /* Main */
+  main{flex:1;display:flex;flex-direction:column;min-width:0}
+  .topbar{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 22px;display:flex;align-items:center;gap:16px}
+  .conn{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+  .conn .g{width:8px;height:8px;border-radius:50%;background:var(--green)}
+  .conn b{color:var(--ink);font-weight:600}
+  .ro{background:var(--amber-soft);color:var(--amber);border:1px solid #efe0bd;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:600}
+  .local{margin-left:auto;background:var(--accent-soft);color:var(--accent);border:1px solid #cbe6e8;border-radius:4px;padding:3px 9px;font-size:11.5px;font-weight:600}
+
+  .tabs{display:flex;gap:2px;padding:0 22px;background:var(--panel);border-bottom:1px solid var(--line)}
+  .tabs button{border:none;background:none;padding:12px 16px;font-size:13.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;font-weight:600}
+  .tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .wrap{padding:22px;overflow:auto}
+  .view{display:none}
+  .view.active{display:block}
+
+  h2.title{margin:0 0 2px;font-size:18px}
+  .sub{color:var(--muted);font-size:12.5px;margin-bottom:18px}
+
+  /* Cards */
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .card .k{font-size:12px;color:var(--muted)}
+  .card .v{font-size:22px;font-weight:700;margin-top:6px;font-family:var(--mono)}
+  .card .n{font-size:11px;color:var(--muted);margin-top:4px}
+  .card.warn .v{color:var(--red)} .card.ok .v{color:var(--green)}
+
+  /* Table */
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .panel h3{margin:0;padding:13px 16px;font-size:13.5px;border-bottom:1px solid var(--line);background:#fafbfc}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13px}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:600;background:#fafbfc}
+  tr:last-child td{border-bottom:none}
+  tr.row:hover{background:#f7fafb;cursor:pointer}
+  .amt{font-family:var(--mono);text-align:right;white-space:nowrap}
+  .acc{font-family:var(--mono);font-weight:600}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap}
+  .pill .d{width:7px;height:7px;border-radius:50%}
+  .p-red{background:var(--red-soft);color:var(--red)} .p-red .d{background:var(--red)}
+  .p-amb{background:var(--amber-soft);color:var(--amber)} .p-amb .d{background:var(--amber)}
+  .p-grn{background:var(--green-soft);color:var(--green)} .p-grn .d{background:var(--green)}
+  .conf{font-size:11.5px;color:var(--muted)}
+
+  /* Investigation */
+  .invhead{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .crumb{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+  .crumb b{color:var(--ink)}
+  .verdict{background:#fff;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:6px;padding:12px 16px;margin-bottom:18px;font-size:13px}
+  .verdict b{color:var(--amber)}
+  .grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;align-items:start}
+  .story td,.story th{font-size:12.5px;padding:9px 14px}
+  .tag{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .bad{color:var(--red)} .good{color:var(--green)}
+  .cons{padding:16px}
+  .cons .line{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px}
+  .cons .line:last-of-type{border-bottom:none}
+  .cons .line .amt{font-weight:600}
+  .cons .res{margin-top:10px;background:var(--amber-soft);border:1px solid #efe0bd;border-radius:6px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+  .cons .res b{color:var(--amber);font-family:var(--mono);font-size:16px}
+  .need{font-size:11.5px;color:var(--amber);margin-top:8px;display:flex;align-items:center;gap:6px}
+
+  .drop{border:1.5px dashed #cdd6df;border-radius:8px;padding:16px;text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px;background:#fcfdfe}
+  .drop .ic{font-size:20px;opacity:.5}
+  .drop b{color:var(--ink);display:block;margin:4px 0 2px;font-size:13px}
+  .drop.parsed{border-style:solid;border-color:var(--green);background:var(--green-soft);color:var(--green)}
+  .privacy{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
+
+  .mail{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12.5px}
+  .mail:last-child{border-bottom:none}
+  .mail .ic{color:var(--muted)}
+  .mail .m-sub{font-weight:600}
+  .mail .m-meta{color:var(--muted);font-size:11.5px;margin-top:2px}
+  .scanbtn{width:100%;border:none;background:var(--accent-soft);color:var(--accent);font-weight:600;padding:9px;font-size:12.5px;cursor:pointer;border-top:1px solid var(--line)}
+
+  /* Proposal */
+  .prop{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+  .prop .n{font-weight:700;color:var(--accent);font-size:12px;letter-spacing:.3px}
+  .prop h4{margin:6px 0 6px;font-size:14px}
+  .prop p{margin:0;color:#39424f;font-size:13px;line-height:1.55}
+  .prop .mono{font-family:var(--mono);font-size:12px;color:#39424f;background:#f6f8fa;border:1px solid var(--line);border-radius:5px;padding:8px 10px;margin-top:8px;white-space:pre-wrap}
+  .actions{display:flex;gap:10px;margin-top:6px}
+  .btn{border:1px solid var(--accent);background:var(--accent);color:#fff;padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--accent)}
+  .btn.dim{border-color:var(--line);background:#f2f4f6;color:var(--muted);cursor:not-allowed}
+  .gate{background:var(--red-soft);border:1px solid #f0cfc9;color:#8a3324;border-radius:6px;padding:11px 14px;font-size:12.5px;margin-top:4px}
+  .mockbadge{position:fixed;right:12px;bottom:10px;background:#111826;color:#fff;font-size:10.5px;padding:4px 9px;border-radius:5px;opacity:.7}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand"><span class="dot"></span>CreditCheck<small>Forensic AR credit control</small></div>
+    <nav>
+      <a href="#" class="active" data-go="dash"><span class="i">▦</span>Dashboard</a>
+      <a href="#" data-go="inv"><span class="i">◎</span>Investigate</a>
+      <a href="#" data-go="prop"><span class="i">✎</span>Proposals</a>
+      <a href="#"><span class="i">⛃</span>Accounts</a>
+      <a href="#"><span class="i">⚙</span>Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="lock">🔒 Data stays on this PC</div>
+      <div>Nothing is uploaded.</div>
+      <div class="sub">Subscription · active<br>renews 14 Sep 2026</div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div class="conn"><span class="g"></span>Connected: <b>Demo Company Ltd</b> · Sage 50 v33</div>
+      <span class="ro">READ-ONLY</span>
+      <span class="conn">Last scan: today 08:41 · 142 accounts</span>
+      <span class="local">🔒 Local processing — data never leaves this machine</span>
+    </div>
+
+    <div class="tabs">
+      <button class="active" data-go="dash">Dashboard</button>
+      <button data-go="inv">Investigation</button>
+      <button data-go="prop">Proposal</button>
+    </div>
+
+    <div class="wrap">
+
+      <!-- ============ DASHBOARD ============ -->
+      <section class="view active" id="dash">
+        <h2 class="title">Receivables — Forensic Scan</h2>
+        <div class="sub">142 accounts read from Sage · 18 flagged for review · chase only what is really owed</div>
+
+        <div class="cards">
+          <div class="card"><div class="k">Accounts flagged</div><div class="v">18</div><div class="n">of 142 scanned</div></div>
+          <div class="card ok"><div class="k">False overdue caught</div><div class="v">£24,610</div><div class="n">looks owed — isn't</div></div>
+          <div class="card warn"><div class="k">Real net owed</div><div class="v">£83,240</div><div class="n">confirmed chaseable</div></div>
+          <div class="card"><div class="k">Floating credits</div><div class="v">£11,305</div><div class="n">unallocated — do not chase</div></div>
+        </div>
+
+        <div class="panel">
+          <h3>Flagged accounts — engine verdict</h3>
+          <table>
+            <thead><tr><th>Account</th><th>Customer</th><th class="amt">Book balance</th><th>Engine verdict</th><th>Flag</th><th>Confidence</th></tr></thead>
+            <tbody>
+              <tr class="row" data-go="inv"><td class="acc">LEAS001</td><td>Meridian Leasing</td><td class="amt">£24,310.55</td><td>£18,300 real · £6,010 needs bank check</td><td><span class="pill p-amb"><span class="d"></span>Unallocated receipt</span></td><td class="conf">High</td></tr>
+              <tr class="row" data-go="inv"><td class="acc">HARL01</td><td>Harlow &amp; Vance LLP</td><td class="amt">£188.40</td><td>Likely our mis-tag (£640 CHAPS overpay)</td><td><span class="pill p-red"><span class="d"></span>Mis-allocation</span></td><td class="conf">Medium</td></tr>
+              <tr class="row" data-go="inv"><td class="acc">FACIL001</td><td>Facilio FM</td><td class="amt">£2,940.16</td><td>2 invoices already paid (portal) — false</td><td><span class="pill p-red"><span class="d"></span>False overdue</span></td><td class="conf">High</td></tr>
+              <tr class="row" data-go="inv"><td class="acc">GREEN001</td><td>Greenway Vending Ltd</td><td class="amt">£712.30</td><td>Contra candidate — they invoice us too</td><td><span class="pill p-amb"><span class="d"></span>Two-way trade</span></td><td class="conf">High</td></tr>
+              <tr class="row" data-go="inv"><td class="acc">NIMB001</td><td>Nimbus Services</td><td class="amt">£21,406.77</td><td>Stuck on missing PO — process, not debt</td><td><span class="pill p-amb"><span class="d"></span>Process block</span></td><td class="conf">Medium</td></tr>
+              <tr class="row" data-go="inv"><td class="acc">PORT005</td><td>Portside Estates</td><td class="amt">£4,212.60</td><td>Credit note owed — exact-payer, don't net</td><td><span class="pill p-amb"><span class="d"></span>Floating credit</span></td><td class="conf">High</td></tr>
+              <tr class="row" data-go="inv"><td class="acc">ORCH001</td><td>Orchard House</td><td class="amt">£286.44</td><td>Real — standing order £11.64 short/month</td><td><span class="pill p-grn"><span class="d"></span>Genuine arrears</span></td><td class="conf">High</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ INVESTIGATION ============ -->
+      <section class="view" id="inv">
+        <div class="crumb">Investigate ▸ <b>HARL01 — Harlow &amp; Vance LLP</b></div>
+        <div class="invhead"><h2 class="title">Allocation investigation</h2></div>
+        <div class="verdict">Engine view: book shows <b>£188.40</b> net owed — but a <b>£640 CHAPS overpayment</b> and a Leeds-vs-London credit split suggest this is <b>our mis-tag, not a real debt</b>. Confirm with the bank statement to close it out.</div>
+
+        <div class="grid2">
+          <!-- Left: story -->
+          <div class="panel">
+            <h3>Allocation story line — traced from AUDIT_USAGE</h3>
+            <table class="story">
+              <thead><tr><th>Date</th><th>Tran</th><th>Type</th><th>Detail</th><th class="amt">Amount</th></tr></thead>
+              <tbody>
+                <tr><td>31/01/26</td><td class="tag">210334</td><td>SI</td><td>Batch invoice (London 500123)</td><td class="amt">£480.00</td></tr>
+                <tr><td>04/02/26</td><td class="tag">700456</td><td>SC</td><td>Leeds maintenance credit <span class="bad">→ split across 3 invoices</span></td><td class="amt bad">−£291.60</td></tr>
+                <tr><td>18/10/24</td><td class="tag">204217</td><td>SR</td><td>CHAPS receipt <span class="bad">£640 over invoice value</span></td><td class="amt">£1,120.00</td></tr>
+                <tr><td>—</td><td class="tag">9998</td><td>JC</td><td>Overpay parked in suspense (9998)</td><td class="amt">£640.00</td></tr>
+                <tr><td>current</td><td class="tag">—</td><td>NET</td><td>Open per ledger</td><td class="amt">£188.40</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Right: conservation + intake + email -->
+          <div>
+            <div class="panel">
+              <h3>Conservation check</h3>
+              <div class="cons">
+                <div class="line"><span>Customer paid (cash) <span class="need">needs bank</span></span><span class="amt">£ —</span></div>
+                <div class="line"><span>Our net invoiced (SI − SC)</span><span class="amt">£828.40</span></div>
+                <div class="res"><span>Overpaid / true owed</span><b>pending</b></div>
+                <div class="need">⚠ Drop the bank statement to compute the true figure</div>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:16px">
+              <h3>Evidence intake — parsed on this PC</h3>
+              <div style="padding:14px">
+                <div class="drop"><div class="ic">⬇</div><b>Drop bank statement</b>CSV / OFX / PDF — matches actual cash received</div>
+                <div class="drop parsed"><div class="ic">✓</div><b>customer_AP_screenshot.png — parsed</b>Their ledger shows they paid once, not twice</div>
+                <div class="privacy">🔒 OCR &amp; parsing run locally — nothing is uploaded</div>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:16px">
+              <h3>Related emails (Outlook) — read-only</h3>
+              <div class="mail"><span class="ic">✉</span><div><div class="m-sub">RE: Leeds office maintenance credit</div><div class="m-meta">accounts@harlowvance.example · matched invoice 700456 · 12 Nov</div></div></div>
+              <div class="mail"><span class="ic">✉</span><div><div class="m-sub">Remittance — Jan payment run</div><div class="m-meta">ap@harlowvance.example · matched CHAPS £1,120 · 20 Jan</div></div></div>
+              <button class="scanbtn">🔍 Scan Outlook for this account (authorised · read-only)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PROPOSAL ============ -->
+      <section class="view" id="prop">
+        <div class="crumb">Investigate ▸ HARL01 ▸ <b>Proposed actions</b></div>
+        <h2 class="title">Proposal — you execute in Sage</h2>
+        <div class="sub">CreditCheck never writes to Sage. It prepares the steps and evidence; a human posts them after approval.</div>
+
+        <div class="prop">
+          <div class="n">ACTION 1 · ALLOCATE</div>
+          <h4>Zero-amount receipt to clear the mis-tag</h4>
+          <p>Un-allocate CHAPS receipt (tran 204217), then re-allocate per remittance. Net the Leeds credit 700456 against its <em>own</em> London invoice, not the 3 it was split across.</p>
+          <div class="mono">Customer Receipt · amount 0.00
+  + SC 700456  −£291.60  → invoice 500123
+  + SR residual £640.00  → suspense 9998 reversal
+  Analysis total must = 0.00</div>
+        </div>
+
+        <div class="prop">
+          <div class="n">ACTION 2 · REVERSE</div>
+          <h4>Reverse the £795 overpay out of 2110</h4>
+          <p>Batch credit, ref <span class="tag">9998REV</span>, mirroring the original split line — returns the overpayment to the customer account as a clean credit.</p>
+        </div>
+
+        <div class="prop">
+          <div class="n">ACTION 3 · COMMUNICATE</div>
+          <h4>Draft email to customer (evidence-backed)</h4>
+          <div class="mono">Hi ...,  Thank you for your payment. Having reconciled the
+account, our records now agree with yours: the January CHAPS
+of £1,120.00 covered invoice 500123 in full, and the Leeds
+maintenance credit (£291.60) has been applied. A £640.00
+overpayment sits to your credit — shall we refund or hold it
+against the next invoice?  Statement attached.</div>
+          <div class="actions">
+            <button class="btn ghost">📋 Copy email draft</button>
+            <button class="btn ghost">📄 Attach statement</button>
+          </div>
+        </div>
+
+        <div class="actions" style="margin:16px 0">
+          <button class="btn">⬇ Export allocation file for Sage</button>
+          <button class="btn dim">Post to Sage (disabled — read-only)</button>
+        </div>
+        <div class="gate">⛔ Approval gate: nothing is posted until a supervisor signs off. CreditCheck only prepares — you post.</div>
+      </section>
+
+    </div>
+  </main>
+</div>
+<div class="mockbadge">MOCKUP · sample data · not a working build</div>
+
+<script>
+  function go(id){
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
+    document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.dataset.go===id));
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('[data-go]').forEach(el=>{
+    el.addEventListener('click',e=>{e.preventDefault();go(el.dataset.go);});
+  });
+</script>
+</body>
+</html>
